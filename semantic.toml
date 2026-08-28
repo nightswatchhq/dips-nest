@@ -1,0 +1,665 @@
+# semantic.toml - what this nest's data *means* (RFC-0016). Read by the MCP `schema`
+# tool, the admin UI, and the scaffolded skill. Edit descriptions freely; the
+# `[table.*.footguns]` are DERIVED from the ABI and regenerated - leave them be.
+
+schema_version = 1
+
+[nest]
+description = """
+Direct Indexer Payments (DIPS) on Arbitrum One: the Issuance Allocator, the Recurring Agreement Manager and the Recurring Collector. As of 2026-08-28 the whole stack is deployed, wired and switched off: the allocator sends 100% of the 120.73 GRT/block to the Rewards Manager and 0 to DefaultAllocation, so GIP-0088's ~5% split is a governance parameter change away rather than a deployment away. Nearly every table here is empty on purpose. The table to watch is issuance_allocator__target_allocation_updated: the first row in it is the starting gun for DIPS-funded indexing.
+"""
+
+[table.issuance_allocator__admin_changed]
+description = "`AdminChanged(address,address)` events emitted by the `issuance_allocator` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per AdminChanged(address,address) event"
+
+[table.issuance_allocator__admin_changed.columns]
+newAdmin = "The `newAdmin` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+previousAdmin = "The `previousAdmin` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__default_target_updated]
+description = "`DefaultTargetUpdated(address,address)` events emitted by the `issuance_allocator` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per DefaultTargetUpdated(address,address) event"
+
+[table.issuance_allocator__default_target_updated.columns]
+newAddress = "The `newAddress` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+oldAddress = "The `oldAddress` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__initialized]
+description = "`Initialized(uint64)` events emitted by the `issuance_allocator` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per Initialized(uint64) event"
+
+[table.issuance_allocator__initialized.columns]
+version = "The `version` uint64 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__issuance_distributed]
+description = "Issuance actually paid out to a target. While DefaultAllocation is at zero, every row here goes to the RewardsManager (0x971B9d3d0Ae3ECa029CAB5eA1fB0F72c85e6a525) and nothing reaches indexing agreements."
+grain = "one row per IssuanceDistributed(address,uint256,uint256,uint256) event"
+
+[table.issuance_allocator__issuance_distributed.columns]
+amount = "The `amount` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+fromBlock = "The `fromBlock` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+target = "The `target` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+toBlock = "The `toBlock` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__issuance_distributed.footguns]
+big_ints = [
+    "amount",
+    "fromBlock",
+    "toBlock",
+]
+overflows_dec = [
+    "amount",
+    "fromBlock",
+    "toBlock",
+]
+
+[table.issuance_allocator__issuance_per_block_updated]
+description = "The protocol-wide issuance rate changing. 120.73 GRT/block today, per GIP-0043's 3% annual formula. GIP-0088 describes the Rewards Manager dropping to 114.73 as ~6 GRT/block is redirected."
+grain = "one row per IssuancePerBlockUpdated(uint256,uint256) event"
+
+[table.issuance_allocator__issuance_per_block_updated.columns]
+newIssuancePerBlock = "The `newIssuancePerBlock` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+oldIssuancePerBlock = "The `oldIssuancePerBlock` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__issuance_per_block_updated.footguns]
+big_ints = [
+    "oldIssuancePerBlock",
+    "newIssuancePerBlock",
+]
+overflows_dec = [
+    "oldIssuancePerBlock",
+    "newIssuancePerBlock",
+]
+
+[table.issuance_allocator__issuance_self_mint_allowance]
+description = "`IssuanceSelfMintAllowance(address,uint256,uint256,uint256)` events emitted by the `issuance_allocator` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per IssuanceSelfMintAllowance(address,uint256,uint256,uint256) event"
+
+[table.issuance_allocator__issuance_self_mint_allowance.columns]
+amount = "The `amount` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+fromBlock = "The `fromBlock` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+target = "The `target` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+toBlock = "The `toBlock` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__issuance_self_mint_allowance.footguns]
+big_ints = [
+    "amount",
+    "fromBlock",
+    "toBlock",
+]
+overflows_dec = [
+    "amount",
+    "fromBlock",
+    "toBlock",
+]
+
+[table.issuance_allocator__issuance_self_mint_allowance_aggregate]
+description = "`IssuanceSelfMintAllowanceAggregate(uint256,uint256,uint256)` events emitted by the `issuance_allocator` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per IssuanceSelfMintAllowanceAggregate(uint256,uint256,uint256) event"
+
+[table.issuance_allocator__issuance_self_mint_allowance_aggregate.columns]
+fromBlock = "The `fromBlock` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+toBlock = "The `toBlock` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+totalAmount = "The `totalAmount` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__issuance_self_mint_allowance_aggregate.footguns]
+big_ints = [
+    "totalAmount",
+    "fromBlock",
+    "toBlock",
+]
+overflows_dec = [
+    "totalAmount",
+    "fromBlock",
+    "toBlock",
+]
+
+[table.issuance_allocator__paused]
+description = "`Paused(address)` events emitted by the `issuance_allocator` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per Paused(address) event"
+
+[table.issuance_allocator__paused.columns]
+account = "The `account` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__role_admin_changed]
+description = "`RoleAdminChanged(bytes32,bytes32,bytes32)` events emitted by the `issuance_allocator` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per RoleAdminChanged(bytes32,bytes32,bytes32) event"
+
+[table.issuance_allocator__role_admin_changed.columns]
+newAdminRole = "The `newAdminRole` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+previousAdminRole = "The `previousAdminRole` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+role = "The `role` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__role_granted]
+description = "`RoleGranted(bytes32,address,address)` events emitted by the `issuance_allocator` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per RoleGranted(bytes32,address,address) event"
+
+[table.issuance_allocator__role_granted.columns]
+account = "The `account` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+role = "The `role` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+sender = "The `sender` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__role_revoked]
+description = "`RoleRevoked(bytes32,address,address)` events emitted by the `issuance_allocator` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per RoleRevoked(bytes32,address,address) event"
+
+[table.issuance_allocator__role_revoked.columns]
+account = "The `account` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+role = "The `role` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+sender = "The `sender` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__self_minting_event_mode_updated]
+description = "`SelfMintingEventModeUpdated(uint8,uint8)` events emitted by the `issuance_allocator` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per SelfMintingEventModeUpdated(uint8,uint8) event"
+
+[table.issuance_allocator__self_minting_event_mode_updated.columns]
+newMode = "The `newMode` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+oldMode = "The `oldMode` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__self_minting_offset_accumulated]
+description = "`SelfMintingOffsetAccumulated(uint256,uint256,uint256,uint256)` events emitted by the `issuance_allocator` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per SelfMintingOffsetAccumulated(uint256,uint256,uint256,uint256) event"
+
+[table.issuance_allocator__self_minting_offset_accumulated.columns]
+fromBlock = "The `fromBlock` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+offsetAfter = "The `offsetAfter` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+offsetBefore = "The `offsetBefore` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+toBlock = "The `toBlock` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__self_minting_offset_accumulated.footguns]
+big_ints = [
+    "offsetBefore",
+    "offsetAfter",
+    "fromBlock",
+    "toBlock",
+]
+overflows_dec = [
+    "offsetBefore",
+    "offsetAfter",
+    "fromBlock",
+    "toBlock",
+]
+
+[table.issuance_allocator__self_minting_offset_reconciled]
+description = "`SelfMintingOffsetReconciled(uint256,uint256,uint256,uint256,uint256)` events emitted by the `issuance_allocator` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per SelfMintingOffsetReconciled(uint256,uint256,uint256,uint256,uint256) event"
+
+[table.issuance_allocator__self_minting_offset_reconciled.columns]
+fromBlock = "The `fromBlock` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+offsetAfter = "The `offsetAfter` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+offsetBefore = "The `offsetBefore` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+toBlock = "The `toBlock` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+totalForPeriod = "The `totalForPeriod` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__self_minting_offset_reconciled.footguns]
+big_ints = [
+    "offsetBefore",
+    "offsetAfter",
+    "totalForPeriod",
+    "fromBlock",
+    "toBlock",
+]
+overflows_dec = [
+    "offsetBefore",
+    "offsetAfter",
+    "totalForPeriod",
+    "fromBlock",
+    "toBlock",
+]
+
+[table.issuance_allocator__target_allocation_updated]
+description = "THE ONE TO WATCH. Emitted when a target's share of issuance changes. DefaultAllocation (0x28cd50e9e02856908f4c1966ab035b1f6c4dde1e) sits at 0 today; the first row here moving it above zero is GIP-0088 going live and the start of DIPS-funded indexing."
+grain = "one row per TargetAllocationUpdated(address,uint256,uint256) event"
+
+[table.issuance_allocator__target_allocation_updated.columns]
+newAllocatorMintingRate = "The `newAllocatorMintingRate` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+newSelfMintingRate = "The `newSelfMintingRate` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+target = "The `target` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__target_allocation_updated.footguns]
+big_ints = [
+    "newAllocatorMintingRate",
+    "newSelfMintingRate",
+]
+overflows_dec = [
+    "newAllocatorMintingRate",
+    "newSelfMintingRate",
+]
+
+[table.issuance_allocator__unpaused]
+description = "`Unpaused(address)` events emitted by the `issuance_allocator` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per Unpaused(address) event"
+
+[table.issuance_allocator__unpaused.columns]
+account = "The `account` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.issuance_allocator__upgraded]
+description = "ERC-1967 implementation swap on the allocator proxy. Not a business event, but a governance move worth noticing: the implementation deployed today is 0xf47b3a62f815121eadddc135f5515b274e2feff2."
+grain = "one row per Upgraded(address) event"
+
+[table.issuance_allocator__upgraded.columns]
+implementation = "The `implementation` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__admin_changed]
+description = "`AdminChanged(address,address)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per AdminChanged(address,address) event"
+
+[table.recurring_agreement_manager__admin_changed.columns]
+newAdmin = "The `newAdmin` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+previousAdmin = "The `previousAdmin` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__agreement_added]
+description = "An indexing agreement registered with the manager. The first row here is the first DIPS agreement on mainnet. Note the deployed contract is the `dips`-tagged version, which emits AgreementAdded rather than the AgreementOffered of the published npm `latest` ABI."
+grain = "one row per AgreementAdded(bytes16,address,address,address) event"
+
+[table.recurring_agreement_manager__agreement_added.columns]
+agreementId = "The `agreementId` bytes16 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+collector = "The `collector` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+dataService = "The `dataService` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+provider = "The `provider` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__agreement_reconciled]
+description = "An agreement reconciled against issuance: the point at which work done becomes payment owed."
+grain = "one row per AgreementReconciled(bytes16,uint256,uint256) event"
+
+[table.recurring_agreement_manager__agreement_reconciled.columns]
+agreementId = "The `agreementId` bytes16 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+newMaxNextClaim = "The `newMaxNextClaim` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+oldMaxNextClaim = "The `oldMaxNextClaim` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__agreement_reconciled.footguns]
+big_ints = [
+    "oldMaxNextClaim",
+    "newMaxNextClaim",
+]
+overflows_dec = [
+    "oldMaxNextClaim",
+    "newMaxNextClaim",
+]
+
+[table.recurring_agreement_manager__agreement_rejected]
+description = "`AgreementRejected(bytes16,address,uint8)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per AgreementRejected(bytes16,address,uint8) event"
+
+[table.recurring_agreement_manager__agreement_rejected.columns]
+agreementId = "The `agreementId` bytes16 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+collector = "The `collector` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+reason = "The `reason` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__agreement_removed]
+description = "`AgreementRemoved(bytes16)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per AgreementRemoved(bytes16) event"
+
+[table.recurring_agreement_manager__agreement_removed.columns]
+agreementId = "The `agreementId` bytes16 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__before_issuance_allocation_change]
+description = "`BeforeIssuanceAllocationChange()` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per BeforeIssuanceAllocationChange() event"
+
+[table.recurring_agreement_manager__collector_removed]
+description = "`CollectorRemoved(address)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per CollectorRemoved(address) event"
+
+[table.recurring_agreement_manager__collector_removed.columns]
+collector = "The `collector` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__escrow_basis_set]
+description = "`EscrowBasisSet(uint8,uint8)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per EscrowBasisSet(uint8,uint8) event"
+
+[table.recurring_agreement_manager__escrow_basis_set.columns]
+newBasis = "The `newBasis` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+oldBasis = "The `oldBasis` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__escrow_funded]
+description = "GRT deposited to back an agreement. Escrow funding is the leading indicator that somebody intends to pay for indexing, and it precedes any agreement being accepted."
+grain = "one row per EscrowFunded(address,address,uint256) event"
+
+[table.recurring_agreement_manager__escrow_funded.columns]
+collector = "The `collector` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+deposited = "The `deposited` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+provider = "The `provider` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__escrow_funded.footguns]
+big_ints = ["deposited"]
+overflows_dec = ["deposited"]
+
+[table.recurring_agreement_manager__escrow_withdrawn]
+description = "`EscrowWithdrawn(address,address,uint256)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per EscrowWithdrawn(address,address,uint256) event"
+
+[table.recurring_agreement_manager__escrow_withdrawn.columns]
+collector = "The `collector` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+provider = "The `provider` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+tokens = "The `tokens` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__escrow_withdrawn.footguns]
+big_ints = ["tokens"]
+overflows_dec = ["tokens"]
+
+[table.recurring_agreement_manager__initialized]
+description = "`Initialized(uint64)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per Initialized(uint64) event"
+
+[table.recurring_agreement_manager__initialized.columns]
+version = "The `version` uint64 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__issuance_allocator_set]
+description = "`IssuanceAllocatorSet(address,address)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per IssuanceAllocatorSet(address,address) event"
+
+[table.recurring_agreement_manager__issuance_allocator_set.columns]
+newIssuanceAllocator = "The `newIssuanceAllocator` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+oldIssuanceAllocator = "The `oldIssuanceAllocator` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__min_full_basis_margin_set]
+description = "`MinFullBasisMarginSet(uint8,uint8)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per MinFullBasisMarginSet(uint8,uint8) event"
+
+[table.recurring_agreement_manager__min_full_basis_margin_set.columns]
+newMargin = "The `newMargin` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+oldMargin = "The `oldMargin` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__min_on_demand_basis_threshold_set]
+description = "`MinOnDemandBasisThresholdSet(uint8,uint8)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per MinOnDemandBasisThresholdSet(uint8,uint8) event"
+
+[table.recurring_agreement_manager__min_on_demand_basis_threshold_set.columns]
+newThreshold = "The `newThreshold` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+oldThreshold = "The `oldThreshold` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__min_residual_escrow_factor_set]
+description = "`MinResidualEscrowFactorSet(uint8,uint8)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per MinResidualEscrowFactorSet(uint8,uint8) event"
+
+[table.recurring_agreement_manager__min_residual_escrow_factor_set.columns]
+newValue = "The `newValue` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+oldValue = "The `oldValue` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__min_thaw_fraction_set]
+description = "`MinThawFractionSet(uint8,uint8)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per MinThawFractionSet(uint8,uint8) event"
+
+[table.recurring_agreement_manager__min_thaw_fraction_set.columns]
+newFraction = "The `newFraction` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+oldFraction = "The `oldFraction` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__paused]
+description = "`Paused(address)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per Paused(address) event"
+
+[table.recurring_agreement_manager__paused.columns]
+account = "The `account` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__provider_eligibility_oracle_set]
+description = "`ProviderEligibilityOracleSet(address,address)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per ProviderEligibilityOracleSet(address,address) event"
+
+[table.recurring_agreement_manager__provider_eligibility_oracle_set.columns]
+newOracle = "The `newOracle` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+oldOracle = "The `oldOracle` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__provider_removed]
+description = "`ProviderRemoved(address,address)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per ProviderRemoved(address,address) event"
+
+[table.recurring_agreement_manager__provider_removed.columns]
+collector = "The `collector` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+provider = "The `provider` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__role_admin_changed]
+description = "`RoleAdminChanged(bytes32,bytes32,bytes32)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per RoleAdminChanged(bytes32,bytes32,bytes32) event"
+
+[table.recurring_agreement_manager__role_admin_changed.columns]
+newAdminRole = "The `newAdminRole` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+previousAdminRole = "The `previousAdminRole` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+role = "The `role` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__role_granted]
+description = "`RoleGranted(bytes32,address,address)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per RoleGranted(bytes32,address,address) event"
+
+[table.recurring_agreement_manager__role_granted.columns]
+account = "The `account` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+role = "The `role` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+sender = "The `sender` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__role_revoked]
+description = "`RoleRevoked(bytes32,address,address)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per RoleRevoked(bytes32,address,address) event"
+
+[table.recurring_agreement_manager__role_revoked.columns]
+account = "The `account` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+role = "The `role` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+sender = "The `sender` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__unpaused]
+description = "`Unpaused(address)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per Unpaused(address) event"
+
+[table.recurring_agreement_manager__unpaused.columns]
+account = "The `account` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_agreement_manager__upgraded]
+description = "`Upgraded(address)` events emitted by the `recurring_agreement_manager` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per Upgraded(address) event"
+
+[table.recurring_agreement_manager__upgraded.columns]
+implementation = "The `implementation` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__admin_changed]
+description = "`AdminChanged(address,address)` events emitted by the `recurring_collector` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per AdminChanged(address,address) event"
+
+[table.recurring_collector__admin_changed.columns]
+newAdmin = "The `newAdmin` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+previousAdmin = "The `previousAdmin` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__agreement_accepted]
+description = "An indexer accepting a recurring collection agreement (GIP-0087). Offer -> accept -> collect: this is the middle step, and the first row is the first indexer to sign up to DIPS on mainnet."
+grain = "one row per AgreementAccepted(address,address,address,bytes16,uint64,uint256,uint256,uint32,uint32) event"
+
+[table.recurring_collector__agreement_accepted.columns]
+agreementId = "The `agreementId` bytes16 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+dataService = "The `dataService` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+endsAt = "The `endsAt` uint64 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+maxInitialTokens = "The `maxInitialTokens` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+maxOngoingTokensPerSecond = "The `maxOngoingTokensPerSecond` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+maxSecondsPerCollection = "The `maxSecondsPerCollection` uint32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+minSecondsPerCollection = "The `minSecondsPerCollection` uint32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+payer = "The `payer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+serviceProvider = "The `serviceProvider` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__agreement_accepted.footguns]
+big_ints = [
+    "maxInitialTokens",
+    "maxOngoingTokensPerSecond",
+]
+overflows_dec = [
+    "maxInitialTokens",
+    "maxOngoingTokensPerSecond",
+]
+
+[table.recurring_collector__agreement_canceled]
+description = "`AgreementCanceled(address,address,address,bytes16,uint8)` events emitted by the `recurring_collector` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per AgreementCanceled(address,address,address,bytes16,uint8) event"
+
+[table.recurring_collector__agreement_canceled.columns]
+agreementId = "The `agreementId` bytes16 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+canceledBy = "The `canceledBy` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+dataService = "The `dataService` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+payer = "The `payer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+serviceProvider = "The `serviceProvider` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__agreement_updated]
+description = "`AgreementUpdated(address,address,address,bytes16,uint64,uint256,uint256,uint32,uint32)` events emitted by the `recurring_collector` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per AgreementUpdated(address,address,address,bytes16,uint64,uint256,uint256,uint32,uint32) event"
+
+[table.recurring_collector__agreement_updated.columns]
+agreementId = "The `agreementId` bytes16 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+dataService = "The `dataService` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+endsAt = "The `endsAt` uint64 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+maxInitialTokens = "The `maxInitialTokens` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+maxOngoingTokensPerSecond = "The `maxOngoingTokensPerSecond` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+maxSecondsPerCollection = "The `maxSecondsPerCollection` uint32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+minSecondsPerCollection = "The `minSecondsPerCollection` uint32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+payer = "The `payer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+serviceProvider = "The `serviceProvider` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__agreement_updated.footguns]
+big_ints = [
+    "maxInitialTokens",
+    "maxOngoingTokensPerSecond",
+]
+overflows_dec = [
+    "maxInitialTokens",
+    "maxOngoingTokensPerSecond",
+]
+
+[table.recurring_collector__offer_cancelled]
+description = "`OfferCancelled(address,bytes16,bytes32)` events emitted by the `recurring_collector` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per OfferCancelled(address,bytes16,bytes32) event"
+
+[table.recurring_collector__offer_cancelled.columns]
+agreementId = "The `agreementId` bytes16 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+caller = "The `caller` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+hash = "The `hash` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__offer_stored]
+description = "A payer storing an agreement offer for an indexer to accept. The first step of the lifecycle."
+grain = "one row per OfferStored(bytes16,address,uint8,bytes32) event"
+
+[table.recurring_collector__offer_stored.columns]
+agreementId = "The `agreementId` bytes16 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+offerHash = "The `offerHash` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+offerType = "The `offerType` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+payer = "The `payer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__pause_guardian_set]
+description = "`PauseGuardianSet(address,bool)` events emitted by the `recurring_collector` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per PauseGuardianSet(address,bool) event"
+
+[table.recurring_collector__pause_guardian_set.columns]
+account = "The `account` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+allowed = "The `allowed` bool parameter - stored as exact text `'true'`/`'false'`, not a SQL boolean. `allowed = true` and `AND`/`NOT` implicitly cast and work; `COALESCE`, `CASE`, `bool_and`/`bool_or` and `UNION` do not. Write `allowed = 'true'` or `CAST(allowed AS BOOLEAN)`. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__pause_guardian_set.footguns]
+bools = ["allowed"]
+
+[table.recurring_collector__payer_callback_failed]
+description = "`PayerCallbackFailed(bytes16,address,uint8)` events emitted by the `recurring_collector` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per PayerCallbackFailed(bytes16,address,uint8) event"
+
+[table.recurring_collector__payer_callback_failed.columns]
+agreementId = "The `agreementId` bytes16 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+payer = "The `payer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+stage = "The `stage` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__payment_collected]
+description = "Generic collector payment event. Pairs with r_c_a_collected, which carries the agreement id."
+grain = "one row per PaymentCollected(uint8,bytes32,address,address,address,uint256) event"
+
+[table.recurring_collector__payment_collected.columns]
+collectionId = "The `collectionId` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+dataService = "The `dataService` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+payer = "The `payer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+paymentType = "The `paymentType` uint8 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+receiver = "The `receiver` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+tokens = "The `tokens` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__payment_collected.footguns]
+big_ints = ["tokens"]
+overflows_dec = ["tokens"]
+
+[table.recurring_collector__r_c_a_collected]
+description = "A Recurring Collection Agreement actually collecting: GRT moving from escrow to an indexer for indexing work. The first row here is the first indexer paid through DIPS."
+grain = "one row per RCACollected(address,address,address,bytes16,bytes32,uint256,uint256) event"
+
+[table.recurring_collector__r_c_a_collected.columns]
+agreementId = "The `agreementId` bytes16 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+collectionId = "The `collectionId` bytes32 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+dataService = "The `dataService` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+dataServiceCut = "The `dataServiceCut` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+payer = "The `payer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+serviceProvider = "The `serviceProvider` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+tokens = "The `tokens` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__r_c_a_collected.footguns]
+big_ints = [
+    "tokens",
+    "dataServiceCut",
+]
+overflows_dec = [
+    "tokens",
+    "dataServiceCut",
+]
+
+[table.recurring_collector__signer_authorized]
+description = "`SignerAuthorized(address,address)` events emitted by the `recurring_collector` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per SignerAuthorized(address,address) event"
+
+[table.recurring_collector__signer_authorized.columns]
+authorizer = "The `authorizer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+signer = "The `signer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__signer_revoked]
+description = "`SignerRevoked(address,address)` events emitted by the `recurring_collector` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per SignerRevoked(address,address) event"
+
+[table.recurring_collector__signer_revoked.columns]
+authorizer = "The `authorizer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+signer = "The `signer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__signer_thaw_canceled]
+description = "`SignerThawCanceled(address,address,uint256)` events emitted by the `recurring_collector` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per SignerThawCanceled(address,address,uint256) event"
+
+[table.recurring_collector__signer_thaw_canceled.columns]
+authorizer = "The `authorizer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+signer = "The `signer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+thawEndTimestamp = "The `thawEndTimestamp` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__signer_thaw_canceled.footguns]
+big_ints = ["thawEndTimestamp"]
+overflows_dec = ["thawEndTimestamp"]
+
+[table.recurring_collector__signer_thawing]
+description = "`SignerThawing(address,address,uint256)` events emitted by the `recurring_collector` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per SignerThawing(address,address,uint256) event"
+
+[table.recurring_collector__signer_thawing.columns]
+authorizer = "The `authorizer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+signer = "The `signer` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+thawEndTimestamp = "The `thawEndTimestamp` uint256 parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[table.recurring_collector__signer_thawing.footguns]
+big_ints = ["thawEndTimestamp"]
+overflows_dec = ["thawEndTimestamp"]
+
+[table.recurring_collector__upgraded]
+description = "`Upgraded(address)` events emitted by the `recurring_collector` contract. (seeded from the ABI - edit semantic.toml to improve this)"
+grain = "one row per Upgraded(address) event"
+
+[table.recurring_collector__upgraded.columns]
+implementation = "The `implementation` address parameter. (seeded from the ABI - edit semantic.toml to improve this)"
+
+[view]
+
+# Authored views (views/*.sql) are described here so the MCP/`/schema` can render them:
+# [view.your_view_name]
+# description = "What this derivation computes."
+
+[view.dips_timeline]
+description = """
+Every governance move that has configured DIPS on Arbitrum One, in order. The stack was switched on 2026-07-23 (issuance rate 0 -> 120.73 GRT/block, agreement manager wired to the allocator) and finished being wired on 2026-08-25 (collector pause guardian, provider-eligibility oracle, RewardsManager allocated the full 120.73, DefaultAllocation registered as the default target with zero). The next row in this view is the one that matters.
+"""
+grain = "one row per DIPS configuration event across all three contracts"
+
+[view.dips_current_allocation]
+description = """
+The latest allocation per target: how much issuance each destination currently receives. DefaultAllocation (0x28cd50e9e02856908f4c1966ab035b1f6c4dde1e) is the indexing-agreement side and is at zero. The day it is not zero, DIPS is funding indexers.
+"""
+grain = "one row per allocation target, latest state"

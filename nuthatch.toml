@@ -1,0 +1,28 @@
+[nest]
+name = "dips-nest"
+chain = "arbitrum-one"
+chain_id = 42161
+rpc_urls = [
+    "https://arb1.arbitrum.io/rpc",
+    "https://arb-pokt.nodies.app",
+]
+schema_version = 1
+block_timestamps = true
+
+[[contracts]]
+alias = "issuance_allocator"
+address = "0xb64f29b2d81140ffc3a135e319561a1bd03b1a7e"
+start_block = 486895439
+abi = "abis/issuance_allocator.json"
+
+[[contracts]]
+alias = "recurring_agreement_manager"
+address = "0x51f860b03dee6a6ea27392dcceccd908204149f2"
+start_block = 486895534
+abi = "abis/recurring_agreement_manager.json"
+
+[[contracts]]
+alias = "recurring_collector"
+address = "0xff0dc7310fbfbcc2524dae230cd4f34727eb84ee"
+start_block = 486895281
+abi = "abis/recurring_collector.json"

@@ -1,0 +1,79 @@
+# nuthatch nest on arbitrum-one
+
+A self-hosted blockchain index. Query it locally; there is no third-party API.
+
+## Contracts
+- `issuance_allocator` = 0xb64f29b2d81140ffc3a135e319561a1bd03b1a7e
+- `recurring_agreement_manager` = 0x51f860b03dee6a6ea27392dcceccd908204149f2
+- `recurring_collector` = 0xff0dc7310fbfbcc2524dae230cd4f34727eb84ee
+
+## Tables (one per contract event)
+- `issuance_allocator__admin_changed` - AdminChanged(address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, previousAdmin, newAdmin)
+- `issuance_allocator__default_target_updated` - DefaultTargetUpdated(address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, oldAddress, newAddress)
+- `issuance_allocator__initialized` - Initialized(uint64) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, version)
+- `issuance_allocator__issuance_distributed` - IssuanceDistributed(address,uint256,uint256,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, target, amount, fromBlock, toBlock)
+- `issuance_allocator__issuance_per_block_updated` - IssuancePerBlockUpdated(uint256,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, oldIssuancePerBlock, newIssuancePerBlock)
+- `issuance_allocator__issuance_self_mint_allowance` - IssuanceSelfMintAllowance(address,uint256,uint256,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, target, amount, fromBlock, toBlock)
+- `issuance_allocator__issuance_self_mint_allowance_aggregate` - IssuanceSelfMintAllowanceAggregate(uint256,uint256,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, totalAmount, fromBlock, toBlock)
+- `issuance_allocator__paused` - Paused(address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, account)
+- `issuance_allocator__role_admin_changed` - RoleAdminChanged(bytes32,bytes32,bytes32) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, role, previousAdminRole, newAdminRole)
+- `issuance_allocator__role_granted` - RoleGranted(bytes32,address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, role, account, sender)
+- `issuance_allocator__role_revoked` - RoleRevoked(bytes32,address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, role, account, sender)
+- `issuance_allocator__self_minting_event_mode_updated` - SelfMintingEventModeUpdated(uint8,uint8) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, oldMode, newMode)
+- `issuance_allocator__self_minting_offset_accumulated` - SelfMintingOffsetAccumulated(uint256,uint256,uint256,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, offsetBefore, offsetAfter, fromBlock, toBlock)
+- `issuance_allocator__self_minting_offset_reconciled` - SelfMintingOffsetReconciled(uint256,uint256,uint256,uint256,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, offsetBefore, offsetAfter, totalForPeriod, fromBlock, toBlock)
+- `issuance_allocator__target_allocation_updated` - TargetAllocationUpdated(address,uint256,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, target, newAllocatorMintingRate, newSelfMintingRate)
+- `issuance_allocator__unpaused` - Unpaused(address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, account)
+- `issuance_allocator__upgraded` - Upgraded(address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, implementation)
+- `recurring_agreement_manager__admin_changed` - AdminChanged(address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, previousAdmin, newAdmin)
+- `recurring_agreement_manager__agreement_added` - AgreementAdded(bytes16,address,address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, agreementId, collector, dataService, provider)
+- `recurring_agreement_manager__agreement_reconciled` - AgreementReconciled(bytes16,uint256,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, agreementId, oldMaxNextClaim, newMaxNextClaim)
+- `recurring_agreement_manager__agreement_rejected` - AgreementRejected(bytes16,address,uint8) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, agreementId, collector, reason)
+- `recurring_agreement_manager__agreement_removed` - AgreementRemoved(bytes16) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, agreementId)
+- `recurring_agreement_manager__before_issuance_allocation_change` - BeforeIssuanceAllocationChange() (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq)
+- `recurring_agreement_manager__collector_removed` - CollectorRemoved(address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, collector)
+- `recurring_agreement_manager__escrow_basis_set` - EscrowBasisSet(uint8,uint8) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, oldBasis, newBasis)
+- `recurring_agreement_manager__escrow_funded` - EscrowFunded(address,address,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, provider, collector, deposited)
+- `recurring_agreement_manager__escrow_withdrawn` - EscrowWithdrawn(address,address,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, provider, collector, tokens)
+- `recurring_agreement_manager__initialized` - Initialized(uint64) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, version)
+- `recurring_agreement_manager__issuance_allocator_set` - IssuanceAllocatorSet(address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, oldIssuanceAllocator, newIssuanceAllocator)
+- `recurring_agreement_manager__min_full_basis_margin_set` - MinFullBasisMarginSet(uint8,uint8) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, oldMargin, newMargin)
+- `recurring_agreement_manager__min_on_demand_basis_threshold_set` - MinOnDemandBasisThresholdSet(uint8,uint8) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, oldThreshold, newThreshold)
+- `recurring_agreement_manager__min_residual_escrow_factor_set` - MinResidualEscrowFactorSet(uint8,uint8) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, oldValue, newValue)
+- `recurring_agreement_manager__min_thaw_fraction_set` - MinThawFractionSet(uint8,uint8) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, oldFraction, newFraction)
+- `recurring_agreement_manager__paused` - Paused(address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, account)
+- `recurring_agreement_manager__provider_eligibility_oracle_set` - ProviderEligibilityOracleSet(address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, oldOracle, newOracle)
+- `recurring_agreement_manager__provider_removed` - ProviderRemoved(address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, collector, provider)
+- `recurring_agreement_manager__role_admin_changed` - RoleAdminChanged(bytes32,bytes32,bytes32) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, role, previousAdminRole, newAdminRole)
+- `recurring_agreement_manager__role_granted` - RoleGranted(bytes32,address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, role, account, sender)
+- `recurring_agreement_manager__role_revoked` - RoleRevoked(bytes32,address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, role, account, sender)
+- `recurring_agreement_manager__unpaused` - Unpaused(address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, account)
+- `recurring_agreement_manager__upgraded` - Upgraded(address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, implementation)
+- `recurring_collector__admin_changed` - AdminChanged(address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, previousAdmin, newAdmin)
+- `recurring_collector__agreement_accepted` - AgreementAccepted(address,address,address,bytes16,uint64,uint256,uint256,uint32,uint32) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, dataService, payer, serviceProvider, agreementId, endsAt, maxInitialTokens, maxOngoingTokensPerSecond, minSecondsPerCollection, maxSecondsPerCollection)
+- `recurring_collector__agreement_canceled` - AgreementCanceled(address,address,address,bytes16,uint8) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, dataService, payer, serviceProvider, agreementId, canceledBy)
+- `recurring_collector__agreement_updated` - AgreementUpdated(address,address,address,bytes16,uint64,uint256,uint256,uint32,uint32) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, dataService, payer, serviceProvider, agreementId, endsAt, maxInitialTokens, maxOngoingTokensPerSecond, minSecondsPerCollection, maxSecondsPerCollection)
+- `recurring_collector__offer_cancelled` - OfferCancelled(address,bytes16,bytes32) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, caller, agreementId, hash)
+- `recurring_collector__offer_stored` - OfferStored(bytes16,address,uint8,bytes32) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, agreementId, payer, offerType, offerHash)
+- `recurring_collector__pause_guardian_set` - PauseGuardianSet(address,bool) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, account, allowed)
+- `recurring_collector__payer_callback_failed` - PayerCallbackFailed(bytes16,address,uint8) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, agreementId, payer, stage)
+- `recurring_collector__payment_collected` - PaymentCollected(uint8,bytes32,address,address,address,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, paymentType, collectionId, payer, receiver, dataService, tokens)
+- `recurring_collector__r_c_a_collected` - RCACollected(address,address,address,bytes16,bytes32,uint256,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, dataService, payer, serviceProvider, agreementId, collectionId, tokens, dataServiceCut)
+- `recurring_collector__signer_authorized` - SignerAuthorized(address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, authorizer, signer)
+- `recurring_collector__signer_revoked` - SignerRevoked(address,address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, authorizer, signer)
+- `recurring_collector__signer_thaw_canceled` - SignerThawCanceled(address,address,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, authorizer, signer, thawEndTimestamp)
+- `recurring_collector__signer_thawing` - SignerThawing(address,address,uint256) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, authorizer, signer, thawEndTimestamp)
+- `recurring_collector__upgraded` - Upgraded(address) (block_number, block_hash, block_timestamp, tx_hash, log_index, address, _seq, implementation)
+
+## Live HTTP API (run `nuthatch dev`)
+- `GET /`                    index status
+- `GET /tables`              every table with its columns
+- `GET /table/{name}?limit=N` recent rows of one table (hot + sealed)
+- `GET /entity/{id}`         one row by id (`{block:012}-{logindex:06}`)
+- `GET /sql?q=SELECT...`     read-only SQL; each table is a view named `{alias}__{event}`
+- `GET /balances?limit=N`    top holder balances (when an ERC-20 Transfer table is present)
+- `GET /balance/{address}`   one address's derived balance
+
+## MCP (for coding agents)
+Run `nuthatch mcp` (stdio) to expose tools: status, schema, tables, table, sql, entity,
+balance, top_balances. Fully offline against the local instance; nothing phones home.

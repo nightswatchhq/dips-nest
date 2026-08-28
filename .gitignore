@@ -1,0 +1,4 @@
+# nuthatch's local index: sealed Parquet segments + hot store + cursor.
+# Rebuildable from chain in about two minutes, so it has no business in git.
+segments/
+nuthatch.redb
