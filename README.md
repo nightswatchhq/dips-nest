@@ -10,17 +10,32 @@ being zero?**
 ## Why now
 
 As of 2026-08-28 the whole DIPS contract stack is live on Arbitrum One and switched off. The
-allocator is deployed, wired, and distributing, with two targets registered:
+allocator is deployed, wired, and distributing.
+
+**Re-read 2026-09-02, and it had moved.** There are now three targets, not two:
 
 ```
 getIssuancePerBlock()   120.73 GRT/block
-getTargets()            [DefaultAllocation, RewardsManager]
 
-  RewardsManager     (0x971B…)  →  120.73 GRT/block   (100%)
-  DefaultAllocation  (0x28cd…)  →  0                  (0%)
+target                                       total   allocMint   selfMint
+DefaultAllocation     (0x28cd…dde1e)          0.000      0.000      0.000
+RewardsManager        (0x971b…a525)          96.584      0.000     96.584
+InnovationAllocation  (0x2ff0…b16e)          24.146     24.146      0.000
+
+sum of per-target total == getIssuancePerBlock
 ```
 
-`RewardsManager.issuancePerBlock()` independently reports 120.73, so nothing has been redirected.
+`InnovationAllocation` (GIP-0089) arrived on mainnet holding **a fifth of all issuance**, and
+nothing announced it. It was found by reading the allocator directly.
+
+Two things worth carrying away from that. `Allocation` has **three** fields,
+`(totalAllocationRate, allocatorMintingRate, selfMintingRate)`; a two-field ABI decodes without
+complaint and returns every value shifted by one position. And a target's share is
+`allocatorMintingRate + selfMintingRate`: the fields are mechanism, not amount, and reading either
+alone is wrong in one direction or the other. The RewardsManager self-mints its whole 96.584 while
+InnovationAllocation is sent its 24.146, so either single-field reading zeroes one of them.
+
+The sum being exactly `getIssuancePerBlock()` is the cheapest correctness check this data has.
 GIP-0088's ~5% split is therefore a governance parameter change, not a deployment. Whoever is
 already indexing these contracts sees the split move the moment it moves.
 
@@ -97,13 +112,31 @@ GIP-0089's Innovation Allocation is due to go live on 2026-08-31, and `Innovatio
 still absent from the mainnet address book while existing on Sepolia. The 25 August wiring is three
 days ahead of that date, which is worth watching rather than concluding anything from.
 
+## Arbitrum Sepolia
+
+`nuthatch.sepolia.toml` points the same three contracts at chain 421614, where DIPS **has** been
+exercised. Measured 2026-09-02:
+
+```
+RecurringCollector          OfferStored 113, AgreementAccepted 111,
+                            RCACollected 1099, AgreementCanceled 4
+RecurringAgreementManager   AgreementAdded 113, AgreementRejected 0
+```
+
+1,440 real lifecycle events, against mainnet's zero. Anything reading the agreement lifecycle
+should be developed against this and only then pointed at mainnet, because otherwise its first
+contact with real data is the day the numbers matter most.
+
+The ABIs and views are shared unchanged. Confirmed rather than assumed: the mainnet event
+signatures decode Sepolia's logs, which is how those counts were taken.
+
 ## Views
 
 - `dips_timeline` — every governance move that has configured DIPS, in order. The next row is the
   one that matters.
 - `dips_current_allocation` — latest allocation per target. The single number everyone wants.
 
-## Every other table is empty, and that is correct
+## Every other table is empty on mainnet, and that is correct
 
 The three contracts were deployed and initialized in a single burst around L2 block 486,895,281 and
 have emitted nothing but `Upgraded`, `AdminChanged`, `Initialized`, `RoleGranted` and
@@ -118,6 +151,9 @@ That is the finding, not a failure. The rails are built and idle.
 ```sh
 nuthatch dev                       # backfill from deployment, follow the tip, serve :8288
 nuthatch sql "SELECT * FROM issuance_allocator__target_allocation_updated ORDER BY block_number"
+
+# Sepolia, where the agreement lifecycle has actual rows
+nuthatch dev --config nuthatch.sepolia.toml
 ```
 
 ## Consumers
