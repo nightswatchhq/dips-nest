@@ -1,0 +1,50 @@
+# dips-nest, Arbitrum Sepolia.
+#
+# The same three contracts as the mainnet nest, on the testnet where DIPS has actually been
+# exercised. Mainnet is armed and has never produced a single agreement event; Sepolia, measured
+# 2026-09-02, carries the whole lifecycle:
+#
+#   RecurringCollector          OfferStored 113, AgreementAccepted 111,
+#                               RCACollected 1099, AgreementCanceled 4
+#   RecurringAgreementManager   AgreementAdded 113, AgreementRejected 0
+#
+# That is the reason this exists. Any view over the agreement lifecycle written against mainnet is
+# written against empty tables, and its first contact with real data is the day the numbers matter
+# most. Here there are 1,440 events to be wrong about cheaply.
+#
+# The ABIs and views are shared with the mainnet nest unchanged. Confirmed rather than assumed: the
+# mainnet event signatures decode Sepolia's logs, which is how the counts above were taken.
+#
+# Addresses from graphprotocol/contracts — `packages/issuance/addresses.json` for the allocator and
+# the manager, `packages/horizon/addresses.json` for the collector, both chain 421614.
+
+[nest]
+name = "dips-nest-sepolia"
+chain = "arbitrum-sepolia"
+chain_id = 421614
+rpc_urls = [
+    "https://sepolia-rollup.arbitrum.io/rpc",
+]
+schema_version = 1
+block_timestamps = true
+
+# start_block values are the first block carrying a log from each contract, read over RPC rather
+# than taken from a deployment record, so a backfill starts at the earliest block that can matter.
+
+[[contracts]]
+alias = "issuance_allocator"
+address = "0x76a0d75651d4db83f74ac502b86a0ae4e19ac38b"
+start_block = 250574013
+abi = "abis/issuance_allocator.json"
+
+[[contracts]]
+alias = "recurring_agreement_manager"
+address = "0x590dbbbdb1b6261e39bcc1fe88bffc21c847a68e"
+start_block = 258322276
+abi = "abis/recurring_agreement_manager.json"
+
+[[contracts]]
+alias = "recurring_collector"
+address = "0x0b18befc60455121ad66ae6e4a647955fcde3900"
+start_block = 258322094
+abi = "abis/recurring_collector.json"
