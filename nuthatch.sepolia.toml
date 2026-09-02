@@ -22,8 +22,17 @@
 name = "dips-nest-sepolia"
 chain = "arbitrum-sepolia"
 chain_id = 421614
+# Three endpoints, not one, and the reason is specific rather than superstitious. With only the
+# official endpoint a from-start backfill gets through the getLogs sweep in about a minute and then
+# stops dead on `block_timestamps`: a sustained 429 from ~block 297.9M onward, retried to the
+# 30-second ceiling and never recovering, because Sepolia is dense near the tip and every block
+# carrying an event needs its timestamp fetched. nuthatch also caps seal-direct concurrency to 1
+# against a single host, so the one endpoint is asked for all of it. Measured 2026-09-02: one
+# endpoint wedges at 87%, these three complete the whole 54M-block range and reach the tip.
 rpc_urls = [
     "https://sepolia-rollup.arbitrum.io/rpc",
+    "https://arbitrum-sepolia-rpc.publicnode.com",
+    "https://arbitrum-sepolia.drpc.org",
 ]
 schema_version = 1
 block_timestamps = true

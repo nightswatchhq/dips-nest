@@ -130,6 +130,11 @@ contact with real data is the day the numbers matter most.
 The ABIs and views are shared unchanged. Confirmed rather than assumed: the mainnet event
 signatures decode Sepolia's logs, which is how those counts were taken.
 
+Verified end to end on 2026-09-02 against nuthatch 3.1.0: the full 250,574,013 → tip backfill
+completes in about six minutes and produces exactly those six counts, 58 tables (56 event tables
+plus the two views), `RCACollected` landing in `recurring_collector__r_c_a_collected`, and
+`tokens_dec` / `dataServiceCut_dec` companions alongside the word32 columns.
+
 ## Views
 
 - `dips_timeline` — every governance move that has configured DIPS, in order. The next row is the
@@ -151,10 +156,26 @@ That is the finding, not a failure. The rails are built and idle.
 ```sh
 nuthatch dev                       # backfill from deployment, follow the tip, serve :8288
 nuthatch sql "SELECT * FROM issuance_allocator__target_allocation_updated ORDER BY block_number"
-
-# Sepolia, where the agreement lifecycle has actual rows
-nuthatch dev --config nuthatch.sepolia.toml
 ```
+
+### Sepolia, where the agreement lifecycle has actual rows
+
+A nest is a *directory*, and `nuthatch dev --dir` looks for `nuthatch.toml` in it — there is no
+`--config` flag to point at a differently-named file. Sepolia is also a different chain, and one
+cursor serves one chain, so it cannot be mounted alongside the mainnet nest either. It is a second
+directory and a second process:
+
+```sh
+mkdir -p ../dips-nest-sepolia
+cp -R abis views ../dips-nest-sepolia/
+cp nuthatch.sepolia.toml ../dips-nest-sepolia/nuthatch.toml
+nuthatch schema --dir ../dips-nest-sepolia          # regenerate schema.json / llms.txt / semantic.toml
+nuthatch dev --dir ../dips-nest-sepolia --listen 127.0.0.1:8388 \
+  --window 50000 --seal-direct --concurrency 3
+```
+
+`--concurrency 3` rather than more: it is capped to the number of distinct RPC hosts anyway, and
+the endpoints here are public and rate-limited.
 
 ## Consumers
 
