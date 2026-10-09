@@ -1,6 +1,6 @@
 # dips-nest
 
-A [nuthatch](https://github.com/nightswatchhq/nuthatch) nest indexing **Direct Indexer Payments
+A [nuthatch](https://github.com/nuthatch-org/nuthatch) nest indexing **Direct Indexer Payments
 (DIPS)** on Arbitrum One: the Issuance Allocator, the Recurring Agreement Manager and the Recurring
 Collector.
 
@@ -180,4 +180,4 @@ the endpoints here are public and rate-limited.
 ## Consumers
 
 Lodestar's DIPS panel (CAT-1 in
-[`lodestar/docs/catalyst-community-roadmap.md`](https://github.com/nightswatchhq/lodestar/blob/main/docs/catalyst-community-roadmap.md)).
+[`lodestar/docs/catalyst-community-roadmap.md`](https://github.com/nuthatch-org/lodestar/blob/main/docs/catalyst-community-roadmap.md)).
